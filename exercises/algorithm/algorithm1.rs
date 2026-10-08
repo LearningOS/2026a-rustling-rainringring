@@ -73,9 +73,9 @@ impl<T> LinkedList<T> {
 	{
 		//TODO
 		Self {
-            length: 0,
-            start: None,
-            end: None,
+            length: list_a.length + list_b.length,
+            start: list_a.start,
+            end: list_b.end,
         }
 	}
 }
