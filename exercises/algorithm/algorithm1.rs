@@ -72,6 +72,7 @@ impl<T> LinkedList<T> {
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
 		//TODO
+        
 		Self {
             length: list_a.length + list_b.length,
             start: list_a.start,
