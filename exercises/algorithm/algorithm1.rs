@@ -2,11 +2,12 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
+use std::cmp::Ordering::Greater;
 use std::fmt::{self, Display, Formatter};
+use std::io::SeekFrom::Start;
 use std::ptr::NonNull;
-use std::vec::*;
+use std::{result, vec::*};
 
 #[derive(Debug)]
 struct Node<T> {
@@ -70,14 +71,43 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where T: Ord + Copy
 	{
 		//TODO
-        
-		Self {
-            length: list_a.length + list_b.length,
-            start: list_a.start,
-            end: list_b.end,
+        let mut result = Self::new();
+        let mut a_p = list_a.start;
+        let mut b_p = list_b.start;
+
+        while a_p.is_some()&&b_p.is_some() {
+            let a_node = a_p.unwrap();
+            let b_node = b_p.unwrap();
+
+            unsafe {
+                if (*a_node.as_ptr()).val <= (*b_node.as_ptr()).val {
+                        result.add((*a_node.as_ptr()).val);
+                        a_p = (*a_node.as_ptr()).next;
+                }else {
+                    result.add((*b_node.as_ptr()).val);
+                    b_p = (*b_node.as_ptr()).next;
+                }
+            }
         }
+
+        while let Some(node) = a_p {
+            unsafe { 
+                result.add((*node.as_ptr()).val);
+                a_p = (*node.as_ptr()).next;
+            }
+        }
+
+        while let Some(node) = b_p {
+            unsafe {
+                result.add((*node.as_ptr()).val);
+                b_p = (*node.as_ptr()).next;
+            }
+        }
+
+        result
 	}
 }
 

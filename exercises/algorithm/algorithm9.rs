@@ -2,10 +2,10 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
+use std::process::Child;
 
 pub struct Heap<T>
 where
@@ -38,6 +38,33 @@ where
 
     pub fn add(&mut self, value: T) {
         //TODO
+        self.count += 1;
+        self.items.push(value);
+        self.sift_up(self.count);
+    }
+
+    fn sift_up(&mut self, mut idx: usize) {
+        while idx > 1 {
+            let parent = self.parent_idx(idx);
+            if (self.comparator)(&self.items[idx], &self.items[parent]) {
+                self.items.swap(idx, parent);
+                idx = parent;
+            }else {
+                break;
+            }
+        }
+    }
+
+    fn sift_down(&mut self, mut idx: usize) {
+        while self.children_present(idx) {
+            let child = self.smallest_child_idx(idx);
+            if (self.comparator)(&self.items[child], &self.items[idx]) {
+                self.items.swap(child, idx);
+                idx = child;
+            }else{
+                break;
+            }
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -58,7 +85,16 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        let left = self.left_child_idx(idx);
+        let right = left + 1;
+        if right > self.count {
+            return left;
+        }
+        if (self.comparator)(&self.items[left], &self.items[right]) {
+            left
+        }else {
+            right
+        }
     }
 }
 
@@ -85,7 +121,17 @@ where
 
     fn next(&mut self) -> Option<T> {
         //TODO
-		None
+        if self.is_empty() {
+            None
+        }else{
+            self.items.swap(1, self.count);
+            let result = self.items.pop();
+            self.count -= 1;
+            if self.count > 0 {
+                self.sift_down(1);
+            }
+            result
+        }
     }
 }
 
